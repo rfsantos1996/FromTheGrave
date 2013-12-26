@@ -15,7 +15,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -51,6 +54,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         config.addDefault("config.respawnTimeInMinutes", 3);
         config.addDefault("config.teleportOnRespawn", true);
         config.addDefault("config.respawnLocation", "world;5;64;2");
+        config.addDefault("config.youDied", "&4You died. &cWait %time minutes until the respawn.");
         config.options().copyDefaults(true);
         saveConfig();
         respawnTime = config.getInt("config.respawnTimeInMinutes");
@@ -111,6 +115,8 @@ public class FromTheGrave extends JavaPlugin implements Listener {
                 p.setAllowFlight(true);
                 p.teleport(p.getLocation().add(0, 2, 0));
                 p.setFlying(true);
+                p.sendMessage(getConfig().getString("config.youDied").replaceAll("&", "§").replaceAll("%time", Integer.toString(respawnTime)));
+                e.setCancelled(true);
             }
         }
     }
@@ -144,6 +150,8 @@ public class FromTheGrave extends JavaPlugin implements Listener {
                 p.setAllowFlight(true);
                 p.teleport(p.getLocation().add(0, 2, 0));
                 p.setFlying(true);
+                p.sendMessage(getConfig().getString("config.youDied").replaceAll("&", "§").replaceAll("%time", Integer.toString(respawnTime)));
+                e.setCancelled(true);
             }
         }
     }
@@ -155,6 +163,24 @@ public class FromTheGrave extends JavaPlugin implements Listener {
             if (ghosts.containsKey(p)) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        if (e.getInventory().getHolder() instanceof Player) {
+            Player p = (Player) e.getInventory().getHolder();
+            if (ghosts.containsKey(p)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if (ghosts.containsKey(p)) {
+            e.setCancelled(true);
         }
     }
 
@@ -192,6 +218,16 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         team.removePlayer(e.getPlayer());
         if (ghosts.containsKey(e.getPlayer())) {
             respawn(e.getPlayer());
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onTarget(EntityTargetEvent e) {
+        if (e.getTarget() instanceof Player) {
+            Player p = (Player) e.getTarget();
+            if (ghosts.containsKey(p)) {
+                e.setCancelled(true);
+            }
         }
     }
 
