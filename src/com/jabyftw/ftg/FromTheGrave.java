@@ -255,15 +255,15 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         p.setHealth(p.getMaxHealth());
         p.setFoodLevel(20);
         p.setExhaustion(0);
+        p.setFlying(false); // make them fall
         final Player p2 = p;
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
             @Override
             public void run() {
                 p2.setAllowFlight(false);
-                p2.setFlying(false);
             }
-        }, 20 * 3);
+        }, 20 * 5);
     }
 
     private class RespawnRunnable extends BukkitRunnable {
