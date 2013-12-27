@@ -54,7 +54,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         config.addDefault("config.respawnTimeInMinutes", 3);
         config.addDefault("config.teleportOnRespawn", true);
         config.addDefault("config.respawnLocation", "world;5;64;2");
-        config.addDefault("config.youDied", "&4You died. &cWait %time minutes until the respawn.");
+        config.addDefault("config.youDied", "&4You died. &cWait %time minute(s) until the respawn.");
         config.options().copyDefaults(true);
         saveConfig();
         respawnTime = config.getInt("config.respawnTimeInMinutes");
@@ -256,6 +256,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         p.setFoodLevel(20);
         p.setExhaustion(0);
         p.setFlying(false); // make them fall
+        p.setFireTicks(0);
         final Player p2 = p;
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
