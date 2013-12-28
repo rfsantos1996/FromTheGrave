@@ -156,7 +156,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = false)
     public void onPickUp(InventoryPickupItemEvent e) {
         if (e.getInventory().getHolder() instanceof Player) {
             Player p = (Player) e.getInventory().getHolder();
@@ -189,6 +189,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
         Player p = e.getPlayer();
         team.addPlayer(p);
         p.setScoreboard(sb);
+        p.removePotionEffect(PotionEffectType.INVISIBILITY);
     }
 
     @EventHandler
