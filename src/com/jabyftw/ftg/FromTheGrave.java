@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -111,6 +112,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
                         }
                     }
                 }
+                p.getInventory().setArmorContents(null);
                 p.getInventory().clear();
                 p.setAllowFlight(true);
                 p.teleport(p.getLocation().add(0, 2, 0));
@@ -146,6 +148,7 @@ public class FromTheGrave extends JavaPlugin implements Listener {
                         }
                     }
                 }
+                p.getInventory().setArmorContents(null);
                 p.getInventory().clear();
                 p.setAllowFlight(true);
                 p.teleport(p.getLocation().add(0, 2, 0));
@@ -157,12 +160,10 @@ public class FromTheGrave extends JavaPlugin implements Listener {
     }
 
     @EventHandler(ignoreCancelled = false)
-    public void onPickUp(InventoryPickupItemEvent e) {
-        if (e.getInventory().getHolder() instanceof Player) {
-            Player p = (Player) e.getInventory().getHolder();
-            if (ghosts.containsKey(p)) {
-                e.setCancelled(true);
-            }
+    public void onPickUp(PlayerPickupItemEvent e) {
+        Player p = e.getPlayer();
+        if (ghosts.containsKey(p)) {
+            e.setCancelled(true);
         }
     }
 
